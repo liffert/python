@@ -1,7 +1,7 @@
 import xml.etree.ElementTree
 from urllib.request import urlopen
 import collections
-
+import datetime
 
 map = collections.Counter()
 
@@ -53,6 +53,7 @@ def main():
     urlL = xml.etree.ElementTree.parse("/home/liffert/Prog/NoRepo/rssUrl.xml")
     urlLRoot = urlL.getroot()
 
+    start = datetime.datetime.now()
     for iter in list(urlLRoot):
         rssF = urlopen(iter.text)
         rssXml = xml.etree.ElementTree.parse(rssF)
@@ -69,6 +70,8 @@ def main():
             if not isinstance(descr, type(None)):
                 descr = descr.upper()
                 func(descr)
+
+    print(datetime.datetime.now() - start)
     outXml()
 
 
