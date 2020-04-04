@@ -3,6 +3,8 @@ from urllib.request import urlopen
 import collections
 import gevent
 import datetime
+import os
+import sys
 
 
 def func(str, map):
@@ -34,12 +36,12 @@ def outXml(map):
 
     STR = xml.etree.ElementTree.tostring(root, "utf-8")
     document = '<?xml version="1.0" encoding="UTF-8"?>' + STR.decode("utf-8")
-    out = open("/home/liffert/Prog/NoRepo/out.xml", "w")
+    out = open("out/out.xml", "w")
     out.write(document)
 
     STR = xml.etree.ElementTree.tostring(root2, "utf-8")
     document = '<?xml version="1.0" encoding="UTF-8"?>' + STR.decode("utf-8")
-    out2 = open("/home/liffert/Prog/NoRepo/outWithoutZero.xml", "w")
+    out2 = open("out/outWithoutZero.xml", "w")
     out2.write(document)
 
 
@@ -60,17 +62,18 @@ def mythread(rssXml, map):
 
 
 def main():
+    os.chdir(sys.path[0])
     ListMap = []
-    urlL = xml.etree.ElementTree.parse("/home/liffert/Prog/NoRepo/rssUrl.xml")
+    urlL = xml.etree.ElementTree.parse("resources/rssUrl.xml")
     urlLRoot = urlL.getroot()
 
-    file = open("/home/liffert/Prog/NoRepo/list.txt")
+    file = open("resources/list.txt")
     for iter in range(len(list(urlLRoot))):
         ListMap.append(collections.Counter())
         for line in file:
             line = line.replace("\n", "")
             ListMap[iter][line] = 0
-        file = open("/home/liffert/Prog/NoRepo/list.txt")
+        file = open("resources/list.txt")
 
     threads = []
     start = datetime.datetime.now()

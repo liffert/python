@@ -3,6 +3,8 @@ from urllib.request import urlopen
 import collections
 import gevent
 import datetime
+import os
+import sys
 
 
 map = collections.Counter()
@@ -36,12 +38,12 @@ def outXml():
 
     STR = xml.etree.ElementTree.tostring(root, "utf-8")
     document = '<?xml version="1.0" encoding="UTF-8"?>' + STR.decode("utf-8")
-    out = open("/home/liffert/Prog/NoRepo/out.xml", "w")
+    out = open("out/out.xml", "w")
     out.write(document)
 
     STR = xml.etree.ElementTree.tostring(root2, "utf-8")
     document = '<?xml version="1.0" encoding="UTF-8"?>' + STR.decode("utf-8")
-    out2 = open("/home/liffert/Prog/NoRepo/outWithoutZero.xml", "w")
+    out2 = open("out/outWithoutZero.xml", "w")
     out2.write(document)
 
 
@@ -62,10 +64,11 @@ def mythread(rssXml):
 
 
 def main():
-    urlL = xml.etree.ElementTree.parse("/home/liffert/Prog/NoRepo/rssUrl.xml")
+    os.chdir(sys.path[0])
+    urlL = xml.etree.ElementTree.parse("resources/rssUrl.xml")
     urlLRoot = urlL.getroot()
 
-    file = open("/home/liffert/Prog/NoRepo/list.txt")
+    file = open("resources/list.txt")
     for line in file:
         line = line.replace("\n", "")
         map[line] = 0
