@@ -2,10 +2,13 @@ import source
 import source2
 import source2_2
 import xml.etree.ElementTree
+import os
+import sys
 
 
 def main():
-    conf = xml.etree.ElementTree.parse("/home/liffert/Prog/NoRepo/conf.xml")
+    os.chdir(sys.path[0])
+    conf = xml.etree.ElementTree.parse("resources/conf.xml")
     state = conf.findtext("program")
     if state == "0":
         source.main()
