@@ -85,7 +85,3 @@ def main():
     for iter in ListMap:
         OutMap.subtract(iter)
     outXml(OutMap)
-
-
-if __name__ == "__main__":
-    main()

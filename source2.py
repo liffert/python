@@ -79,7 +79,3 @@ def main():
 
     print(datetime.datetime.now() - start)
     outXml()
-
-
-if __name__ == "__main__":
-    main()
