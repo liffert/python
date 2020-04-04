@@ -5,8 +5,10 @@ import gevent
 import datetime
 
 
-def func(str, map):
+map = collections.Counter()
 
+
+def func(str):
     index = 0
     for iter in list(map):
         while True:
@@ -18,7 +20,7 @@ def func(str, map):
         index = 0
 
 
-def outXml(map):
+def outXml():
     root = xml.etree.ElementTree.Element("names")
     root2 = xml.etree.ElementTree.Element("names")
     for iter in list(map):
@@ -30,7 +32,7 @@ def outXml(map):
             loc2 = xml.etree.ElementTree.SubElement(root2, "location")
             loc2.text = iter
             subLoc2 = xml.etree.ElementTree.SubElement(loc2, "count")
-            subLoc2.text = str(map[iter] * (-1))
+            subLoc2.text = str(map[iter])
 
     STR = xml.etree.ElementTree.tostring(root, "utf-8")
     document = '<?xml version="1.0" encoding="UTF-8"?>' + STR.decode("utf-8")
@@ -43,48 +45,40 @@ def outXml(map):
     out2.write(document)
 
 
-def mythread(rssXml, map):
+def mythread(rssXml):
     for i in rssXml.iterfind("channel/item"):
         title = i.findtext('title')
         if not isinstance(title, type(None)):
             title = title.upper()
-            func(title, map)
+            func(title)
         fulltext = i.findtext('fulltext')
         if not isinstance(fulltext, type(None)):
             fulltext = fulltext.upper()
-            func(fulltext, map)
+            func(fulltext)
         descr = i.findtext('description')
         if not isinstance(descr, type(None)):
             descr = descr.upper()
-            func(descr, map)
+            func(descr)
 
 
 def main():
-    ListMap = []
     urlL = xml.etree.ElementTree.parse("/home/liffert/Prog/NoRepo/rssUrl.xml")
     urlLRoot = urlL.getroot()
 
     file = open("/home/liffert/Prog/NoRepo/list.txt")
-    for iter in range(len(list(urlLRoot))):
-        ListMap.append(collections.Counter())
-        for line in file:
-            line = line.replace("\n", "")
-            ListMap[iter][line] = 0
-        file = open("/home/liffert/Prog/NoRepo/list.txt")
-
+    for line in file:
+        line = line.replace("\n", "")
+        map[line] = 0
     threads = []
     start = datetime.datetime.now()
-    counter = 0
     for iter in list(urlLRoot):
         rssF = urlopen(iter.text)
         rssXml = xml.etree.ElementTree.parse(rssF)
-        threads.append(gevent.spawn(mythread, rssXml, ListMap[counter]))    
+        threads.append(gevent.spawn(mythread, rssXml))
     gevent.joinall(threads)
+
     print(datetime.datetime.now() - start)
-    OutMap = collections.Counter()
-    for iter in ListMap:
-        OutMap.subtract(iter)
-    outXml(OutMap)
+    outXml()
 
 
 if __name__ == "__main__":
