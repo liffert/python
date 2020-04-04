@@ -78,7 +78,7 @@ def main():
     for iter in list(urlLRoot):
         rssF = urlopen(iter.text)
         rssXml = xml.etree.ElementTree.parse(rssF)
-        threads.append(gevent.spawn(mythread, rssXml, ListMap[counter]))    
+        threads.append(gevent.spawn(mythread, rssXml, ListMap[counter]))
     gevent.joinall(threads)
     print(datetime.datetime.now() - start)
     OutMap = collections.Counter()
